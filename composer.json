@@ -1,0 +1,31 @@
+{
+    "name": "ahmedessam/api-versionizer",
+    "description": "Laravel-ApiVersionizer is a versatile package for managing API versioning in Laravel applications. It supports flexible routing, automatic versioning, and deprecation notices, ensuring smooth transitions between API versions while maintaining backward compatibility.",
+    "type": "library",
+    "require": {
+        "php": "^8.2",
+        "illuminate/console": "^11.0",
+        "illuminate/support": "^11.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ahmedessam\\ApiVersionizer\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ahmedessam\\ApiVersionizer\\Providers\\ApiVersionizerServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Ahmed Essam",
+            "email": "aahmedessam30@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
