@@ -143,10 +143,12 @@ class BaseVersionizer
      */
     public function getVersionedControllersPath($version): string
     {
-        $namespace = 'Http/Controllers/' . $this->getDefaultDirectory();
+        $namespace = implode(DIRECTORY_SEPARATOR, [
+            'App', 'Http', 'Controllers', $this->getDefaultDirectory(), ucfirst($this->getVersionFromRequest())
+        ]);
 
-        if (array_key_exists('namespace', $version)) {
-            $namespace .= "/{$version['namespace']}";
+        if (!empty($version['namespace'])) {
+            $namespace .= DIRECTORY_SEPARATOR . $version['namespace'];
         }
 
         return $namespace;
@@ -183,7 +185,7 @@ class BaseVersionizer
      */
     public function getRoutePath($version): string
     {
-        return 'routes' . DIRECTORY_SEPARATOR . $this->getDefaultDirectory(true) . DIRECTORY_SEPARATOR . $version;
+        return implode(DIRECTORY_SEPARATOR, ['routes', $this->getDefaultDirectory(true), $version]);
     }
 
     /**
