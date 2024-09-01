@@ -17,8 +17,6 @@ class Versionizer extends VersionizerOperations
             foreach ($this->getVersionedFolders() as $file) {
                 $this->generateVersionedFiles($version, $file);
             }
-
-            $this->registerRouteServiceProvider();
         }
     }
 
@@ -33,8 +31,6 @@ class Versionizer extends VersionizerOperations
 
             $this->copyVersionFiles($version, $newVersion, $folder);
         }
-
-        $this->registerRouteServiceProvider();
     }
 
     public function delete($version): void
@@ -47,23 +43,6 @@ class Versionizer extends VersionizerOperations
 
         foreach ($this->getVersionedFolders() as $file) {
             $this->deleteDirectory($this->getPath($file, $version));
-        }
-
-        $this->registerRouteServiceProvider();
-    }
-
-    private function registerRouteServiceProvider(): void
-    {
-        $appBootstrapPath = app()->bootstrapPath('providers.php');
-        $content          = File::get($appBootstrapPath);
-
-        if (!str_contains($content, 'Ahmedessam\ApiVersionizer\Providers\ApiVersionizerRouteServiceProvider::class')) {
-            $content = str_replace(
-                'AppServiceProvider::class',
-                'AppServiceProvider::class,' . PHP_EOL . "\tAhmedessam\ApiVersionizer\Providers\ApiVersionizerRouteServiceProvider::class",
-                $content
-            );
-            File::put($appBootstrapPath, $content);
         }
     }
 }

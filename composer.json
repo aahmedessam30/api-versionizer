@@ -16,7 +16,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Ahmedessam\\ApiVersionizer\\Providers\\ApiVersionizerServiceProvider"
+                "Ahmedessam\\ApiVersionizer\\Providers\\ApiVersionizerServiceProvider",
+                "Ahmedessam\\ApiVersionizer\\Providers\\ApiVersionizerRouteServiceProvider"
             ]
         }
     },
