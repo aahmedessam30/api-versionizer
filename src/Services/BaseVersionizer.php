@@ -322,4 +322,12 @@ class BaseVersionizer
     {
         return app()->runningInConsole();
     }
+
+    /**
+     * In Debug Mode.
+     */
+    public function inDebugMode(): bool
+    {
+        return config('api-versionizer.debug', false);
+    }
 }
