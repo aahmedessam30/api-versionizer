@@ -55,12 +55,12 @@ class Versionizer extends VersionizerOperations
     private function registerRouteServiceProvider(): void
     {
         $appBootstrapPath = app()->bootstrapPath('providers.php');
-        $content = File::get($appBootstrapPath);
+        $content          = File::get($appBootstrapPath);
 
         if (!str_contains($content, 'Ahmedessam\ApiVersionizer\Providers\ApiVersionizerRouteServiceProvider::class')) {
             $content = str_replace(
                 'AppServiceProvider::class',
-                'AppServiceProvider::class,' . PHP_EOL . "\tAhmedessam\ApiVersionizer\Providers\ApiVersionizerRouteServiceProvider::class," . PHP_EOL,
+                'AppServiceProvider::class,' . PHP_EOL . "\tAhmedessam\ApiVersionizer\Providers\ApiVersionizerRouteServiceProvider::class",
                 $content
             );
             File::put($appBootstrapPath, $content);

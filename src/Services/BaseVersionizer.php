@@ -183,7 +183,7 @@ class BaseVersionizer
      */
     public function getRoutePath($version): string
     {
-        return 'routes/' . $this->getDefaultDirectory(true) . "/$version";
+        return 'routes' . DIRECTORY_SEPARATOR . $this->getDefaultDirectory(true) . DIRECTORY_SEPARATOR . $version;
     }
 
     /**
@@ -192,7 +192,11 @@ class BaseVersionizer
      */
     public function getVersionedFilesPrefix($version): string
     {
-        $prefix = $this->getDefaultDirectory(true) . '/' . $this->getVersionFromRequest();
+        $prefix = $this->getDefaultDirectory(true);
+
+        if ($this->getVersioningStrategy() === 'uri') {
+            $prefix .= "/" . $this->getVersionFromRequest();
+        }
 
         if (array_key_exists('prefix', $version)) {
             $prefix .= "/{$version['prefix']}";
@@ -238,7 +242,7 @@ class BaseVersionizer
             ->lower()
             ->value();
 
-        if ($this->isApi() && $request->wantJson()) {
+        if ($this->isApi() && $request->wantsJson()) {
             return $this->validateVersion($version);
         }
 
@@ -288,9 +292,9 @@ class BaseVersionizer
     /**
      * Get Deprecated Version.
      */
-    public function getDeprecatedVersion(): string
+    public function getDeprecatedVersions(): array
     {
-        return collect(config('api-versionizer.versions'))->filter(fn ($version) => $version['status'] === 'deprecated')->keys()->first();
+        return collect(config('api-versionizer.versions'))->filter(fn ($version) => $version['status'] === 'deprecated')->keys()->toArray() ?? [];
     }
 
     /**

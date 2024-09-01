@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class VersionizerOperations extends BaseVersionizer
 {
-    protected function deleteDirectory($dir)
+    protected function deleteDirectory($dir): bool
     {
         if (!File::exists($dir)) {
             return true;
@@ -56,7 +56,7 @@ class VersionizerOperations extends BaseVersionizer
         if (StubGenerator::isDefaultStub($stub)) {
             $namespace = $this->getNamespace($path);
             $className = ucfirst($file);
-            $stub = StubGenerator::replaceStub($stub, ['{{ namespace }}', '{{ class }}'], [$namespace, $className]);
+            $stub      = StubGenerator::replaceStub($stub, ['{{ namespace }}', '{{ class }}'], [$namespace, $className]);
         } else {
             $stub = StubGenerator::replaceStub($stub, ['{{ version }}'], [ucfirst($version)]);
         }
@@ -79,47 +79,71 @@ class VersionizerOperations extends BaseVersionizer
     {
         File::ensureDirectoryExists($folder);
 
-        $directories = array_filter(scandir($folder), fn($file) => !in_array($file, ['.', '..']));
+        $entries = array_diff(scandir($folder), ['.', '..']);
 
-        if (empty($directories)) {
-            $destination = Str::of($folder)
-                ->replace(ucfirst($version), ucfirst($newVersion))
-                ->replace($version, $newVersion)
-                ->value();
-
-            File::ensureDirectoryExists($destination);
-
+        if (empty($entries)) {
+            $this->createNewDirectory($version, $newVersion, $folder);
             return;
         }
 
-        foreach ($directories as $file) {
-            $source      = $folder . DIRECTORY_SEPARATOR . $file;
-            $destination = Str::of($folder)
-                    ->replace(ucfirst($version), ucfirst($newVersion))
-                    ->replace($version, $newVersion)
-                    ->value() . DIRECTORY_SEPARATOR . $file;
+        foreach ($entries as $entry) {
+            $source = $folder . DIRECTORY_SEPARATOR . $entry;
+            $destination = $this->getDestinationPath($version, $newVersion, $folder) . DIRECTORY_SEPARATOR . $entry;
 
             if (is_dir($source)) {
                 $this->copyVersionFiles($version, $newVersion, $source);
             } else {
-                File::ensureDirectoryExists(dirname($destination));
-
-                File::copy($source, $destination);
-
-                $content = File::get($destination);
-
-                if (preg_match('/namespace (.*);/', $content, $matches)) {
-
-                    $namespace = $matches[1];
-
-                    $newNamespace = str_replace(ucfirst($version), ucfirst($newVersion), $namespace);
-
-                    $content = str_replace($namespace, $newNamespace, $content);
-
-                    File::put($destination, $content);
-                }
+                $this->copyAndUpdateFile($source, $destination, $version, $newVersion);
             }
         }
+    }
+
+    private function createNewDirectory($version, $newVersion, $folder): void
+    {
+        $destination = Str::of($folder)
+            ->replace(ucfirst($version), ucfirst($newVersion))
+            ->replace($version, $newVersion)
+            ->value();
+
+        File::ensureDirectoryExists($destination);
+    }
+
+    private function getDestinationPath($version, $newVersion, $folder): string
+    {
+        return Str::of($folder)
+            ->replace(ucfirst($version), ucfirst($newVersion))
+            ->replace($version, $newVersion)
+            ->value();
+    }
+
+    private function copyAndUpdateFile($source, $destination, $version, $newVersion): void
+    {
+        File::ensureDirectoryExists(dirname($destination));
+        File::copy($source, $destination);
+
+        $content        = File::get($destination);
+        $updatedContent = $this->updateNamespacesAndUses($content, $version, $newVersion);
+
+        if ($content !== $updatedContent) {
+            File::put($destination, $updatedContent);
+        }
+    }
+
+    private function updateNamespacesAndUses($content, $version, $newVersion): string
+    {
+        $updatedContent = $content;
+
+        if (preg_match('/namespace (.*);/', $content, $matches)) {
+            $updatedContent = str_replace($matches[1], str_replace(ucfirst($version), ucfirst($newVersion), $matches[1]), $updatedContent);
+        }
+
+        if (preg_match_all('/use (.*);/', $content, $matches)) {
+            foreach ($matches[1] as $use) {
+                $updatedContent = str_replace($use, str_replace(ucfirst($version), ucfirst($newVersion), $use), $updatedContent);
+            }
+        }
+
+        return $updatedContent;
     }
 
     protected function getPath($file, $version): string
@@ -141,5 +165,4 @@ class VersionizerOperations extends BaseVersionizer
             ? $folder . ucfirst($this->getDefaultDirectory()) . DIRECTORY_SEPARATOR . ucfirst($version)
             : $folder . $this->getDefaultDirectory(true) . DIRECTORY_SEPARATOR . $version;
     }
-
 }

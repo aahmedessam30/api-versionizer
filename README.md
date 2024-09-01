@@ -20,7 +20,7 @@ Before using the API Versionizer package, you must publish the configuration fil
 php artisan vendor:publish --tag=apiversionizer-config
 ```
 
-This will create a configuration file named `apiversionizer.php` in your `config` directory. The configuration file contains the following options:
+This will create a configuration file named `api-versionizer.php` in your `config` directory. The configuration file contains the following options:
 
 - **current_version**: The current version of the API.
 - **fallback_version**: The fallback version to use if the requested version is not found.
@@ -36,7 +36,7 @@ This will create a configuration file named `apiversionizer.php` in your `config
 
 ### Step 2: Configure API Versions
 
-Once the configuration file is published, you can configure the API versions by editing the `apiversionizer.php` file. You can specify the current version, fallback version, versioning strategy, versioning key, prefix, default version, default directory, versioned folders, middlewares, default files, and supported versions.
+Once the configuration file is published, you can configure the API versions by editing the `api-versionizer.php` file. You can specify the current version, fallback version, versioning strategy, versioning key, prefix, default version, default directory, versioned folders, middlewares, default files, and supported versions.
 
 Here is an example configuration for API versioning:
 
@@ -92,7 +92,7 @@ After configuring the API versions, you can run the Versionizer command to gener
 php artisan api:versionize --versions=v1,v2
 ```
 
-This command will create versioned routes and files based on the configuration specified in the `apiversionizer.php` file. It will generate routes for each versioned file with the appropriate version prefix and middleware.
+This command will create versioned routes and files based on the configuration specified in the `api-versionizer.php` file. It will generate routes for each versioned file with the appropriate version prefix and middleware.
 
 ### Step 4: Access Versioned Routes
 

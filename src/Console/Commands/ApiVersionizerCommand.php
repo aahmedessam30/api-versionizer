@@ -14,7 +14,7 @@ class ApiVersionizerCommand extends Command
      */
     protected $signature = 'api:versionize {--versions= : the versions to versionize the api}
     {--copy= : copy this version to another version} {--to= : the version to copy to}
-    {--delete= : delete this version}';
+    {--delete= : delete this version} {--force : force the operation}';
 
     /**
      * The console command description.
@@ -29,11 +29,11 @@ class ApiVersionizerCommand extends Command
     public function handle()
     {
         try {
-            $this->components->info('Versionizing the api...');
-
             $versions = $this->getVersions($this->option('versions'));
 
             if ($this->option('copy')) {
+
+                $this->components->info('Copying the api version...');
 
                 if (!$this->option('to')) {
                     throw new \RuntimeException('Please provide the version to copy to.');
@@ -48,6 +48,9 @@ class ApiVersionizerCommand extends Command
             }
 
             if ($this->option('delete')) {
+
+                $this->components->info('Deleting the api version...');
+
                 $version = $this->getVersions($this->option('delete'))[0];
 
                 if ($this->confirm("Are you sure you want to delete the `$version` version, which will delete all the files in version `$version` Directories?")) {
@@ -55,6 +58,8 @@ class ApiVersionizerCommand extends Command
                 }
                 return;
             }
+
+            $this->components->info('Versionizing the api...');
 
             ApiVersionizer::versionize($versions);
 
@@ -82,17 +87,21 @@ class ApiVersionizerCommand extends Command
             throw new \RuntimeException('Please provide the version to delete.');
         }
 
-        if ($version === ApiVersionizer::getDefaultVersion()) {
-            throw new \RuntimeException('You can not delete the default version.');
+        if (!$this->option('force')) {
+            if ($version === ApiVersionizer::getDefaultVersion()) {
+                throw new \RuntimeException('You can not delete the default version.');
+            }
+
+            if ($version === ApiVersionizer::getFallbackVersion()) {
+                throw new \RuntimeException('You can not delete the fallback version.');
+            }
+
+            if (!in_array($version, ApiVersionizer::getVersionsFromRoutes(), true)) {
+                throw new \RuntimeException('The version you are trying to delete does not exist.');
+            }
         }
 
-        if ($version === ApiVersionizer::getFallbackVersion()) {
-            throw new \RuntimeException('You can not delete the fallback version.');
-        }
-
-        if (!in_array($version, ApiVersionizer::getVersionsFromRoutes(), true)) {
-            throw new \RuntimeException('The version you are trying to delete does not exist.');
-        }
+        $this->components->warn('Deleting the version will delete all the files in version Directories.');
 
         ApiVersionizer::delete($version);
 
