@@ -105,7 +105,7 @@ class BaseVersionizer
      */
     public function getVersionFiles(string $version): array
     {
-        return array_key_exists($version, $this->getVersionInfo($version)) && array_key_exists('files', $this->getVersionInfo($version))
+        return in_array($version, $this->getActiveVersions()) && array_key_exists('files', $this->getVersionInfo($version))
             ? $this->getVersionInfo($version)['files']
             : $this->getDefaultFiles();
     }
@@ -115,9 +115,17 @@ class BaseVersionizer
      */
     public function getVersionMiddlewares($version): array
     {
-        return array_key_exists('middlewares', $version) && is_array($version['middlewares']) && !empty($version['middlewares'])
-            ? array_merge($this->getDefaultMiddlewares(), $version['middlewares'])
-            : $this->getDefaultMiddlewares();
+        $requestVersion = $this->getVersionFromRequest();
+        $middlewares    = $this->getDefaultMiddlewares();
+
+        if (in_array($requestVersion, $this->getActiveVersions())) {
+            $middlewares = array_merge($middlewares, $this->getVersionInfo($requestVersion)['middlewares'] ?? []);
+            $middlewares = array_key_exists('middlewares', $version) && is_array($version['middlewares']) && !empty($version['middlewares'])
+                ? array_merge($middlewares, $version['middlewares'])
+                : $middlewares;
+        }
+
+        return $middlewares;
     }
 
     /**
