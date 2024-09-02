@@ -16,8 +16,6 @@ class ApiVersionizerMiddleware
 
         $request->merge(['api_version' => $version]);
 
-        $request->headers->set('Accept', "application/json");
-        $request->headers->set('Content-Type', "application/json");
         $request->headers->set('Accept', "application/vnd.$version+json");
         $request->headers->set(config('api-versionizer.versioning_key.header', 'X-Api-Version'), $version);
 
