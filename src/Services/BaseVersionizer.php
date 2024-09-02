@@ -12,9 +12,9 @@ class BaseVersionizer
     /**
      * Get the versions.
      */
-    public function getVersions(): array
+    public function getVersions($keysOnly = false): array
     {
-        return config('api-versionizer.versions', []);
+        return $keysOnly ? array_keys(config('api-versionizer.versions', [])) : config('api-versionizer.versions', []);
     }
 
     /**
@@ -265,11 +265,11 @@ class BaseVersionizer
      */
     public function validateVersion($version): string
     {
-        if (!array_key_exists($version, $this->getVersions())) {
+        if (!in_array($version, $this->getVersions(true), true)) {
             throw new ApiVersionizerException("API version $version is not found", 404);
         }
 
-        if (!array_key_exists($version, $this->getActiveVersions())) {
+        if (!in_array($version, $this->getActiveVersions(), true)) {
             throw new ApiVersionizerException("API version $version is not active", 404);
         }
 
