@@ -156,7 +156,7 @@ class BaseVersionizer
         ]);
 
         if (!empty($version['namespace'])) {
-            $namespace .= "\\{$version['namespace']}\\";
+            $namespace .= "\\{$version['namespace']}";
         }
 
         return $namespace;
