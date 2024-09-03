@@ -151,12 +151,12 @@ class BaseVersionizer
      */
     public function getVersionedControllersPath($version): string
     {
-        $namespace = implode(DIRECTORY_SEPARATOR, [
+        $namespace = implode('\\', [
             'App', 'Http', 'Controllers', $this->getDefaultDirectory(), ucfirst($this->getVersionFromRequest())
         ]);
 
         if (!empty($version['namespace'])) {
-            $namespace .= DIRECTORY_SEPARATOR . $version['namespace'];
+            $namespace .= "\\{$version['namespace']}\\";
         }
 
         return $namespace;
