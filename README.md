@@ -160,4 +160,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Issues
 If you find any issues with the package or have any questions, please feel free to open an issue on the GitHub repository.
 
-Enjoy building your multilingual applications with Laravel AutoTranslate!
+Enjoy using the API Versionizer package in your Laravel applications! 🚀
