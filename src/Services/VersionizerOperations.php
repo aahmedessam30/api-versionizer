@@ -76,11 +76,27 @@ class VersionizerOperations extends BaseVersionizer
 
             $folder = "routes" . DIRECTORY_SEPARATOR . $this->getDefaultDirectory(true) . DIRECTORY_SEPARATOR . $version;
 
-            if (!File::exists(base_path($folder . DIRECTORY_SEPARATOR . "{$file['name']}.php"))) {
-                $stub = StubGenerator::getStub($name, __DIR__ . '/../stubs');
-                StubGenerator::saveStub($folder . DIRECTORY_SEPARATOR . "{$file['name']}.php", $stub);
+            if (array_key_exists('group', $file)) {
+                $folder .= DIRECTORY_SEPARATOR . strtolower($file['group']);
             }
+
+            $this->generateFileIfNotExists($file['name'], $folder, $name);
         }
+    }
+
+    protected function generateFileIfNotExists($file, $path, $stubName): void
+    {
+        $filePath = base_path($path . DIRECTORY_SEPARATOR . "$file.php");
+
+        if (File::exists($filePath)) {
+            return;
+        }
+
+        File::ensureDirectoryExists(dirname($filePath));
+
+        $stub = StubGenerator::getStub($stubName, __DIR__ . '/../stubs');
+
+        StubGenerator::saveStub($filePath, $stub);
     }
 
     protected function generateStub($file, $path, $version): void

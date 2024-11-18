@@ -36,7 +36,13 @@ class ApiVersionizerRouteServiceProvider extends ServiceProvider
                     $route->namespace(ApiVersionizer::getVersionedControllersPath($version));
                 }
 
-                $route->group(base_path(ApiVersionizer::getRoutePath($reqVersion) . DIRECTORY_SEPARATOR . "{$version['name']}.php"));
+                $path = base_path(ApiVersionizer::getRoutePath($reqVersion));
+
+                if (array_key_exists('group', $version)) {
+                    $path .= DIRECTORY_SEPARATOR . $version['group'];
+                }
+
+                $route->group($path . DIRECTORY_SEPARATOR . "{$version['name']}.php");
             }
         }
     }

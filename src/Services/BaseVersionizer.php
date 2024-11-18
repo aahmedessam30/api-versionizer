@@ -312,13 +312,7 @@ class BaseVersionizer
      */
     public function getVersionedApiFolders($version): array
     {
-        return collect($this->getVersionInfo($version)['files'])
-            ->when(fn($files) => array_diff(
-                collect($this->getDefaultFiles())->pluck('name')->toArray(),
-                $files->pluck('name')->toArray()), fn($files) => $files->merge($this->getDefaultFiles())
-            )
-            ->pluck('namespace', 'name')
-            ->toArray();
+        return collect($this->getVersionInfo($version)['files'])->pluck('namespace', 'name')->toArray();
     }
 
     /**
