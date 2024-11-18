@@ -32,6 +32,7 @@ This will create a configuration file named `api-versionizer.php` in your `confi
 - **versioned_folders**: An array of directories containing versioned files.
 - **middlewares**: An array of middleware classes to apply to versioned routes.
 - **default_files**: An array of default files to use for versioned routes.
+- **use_default_namespace**: A flag to indicate whether to use the default namespace for versioned files.
 - **versions**: An array of supported API versions.
 
 ### Step 2: Configure API Versions
