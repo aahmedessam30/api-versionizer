@@ -317,7 +317,7 @@ class BaseVersionizer
                 collect($this->getDefaultFiles())->pluck('name')->toArray(),
                 $files->pluck('name')->toArray()), fn($files) => $files->merge($this->getDefaultFiles())
             )
-            ->pluck('namespace')
+            ->pluck('namespace', 'name')
             ->toArray();
     }
 

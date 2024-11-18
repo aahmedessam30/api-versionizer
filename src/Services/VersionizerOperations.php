@@ -45,8 +45,8 @@ class VersionizerOperations extends BaseVersionizer
     {
         $entries = $this->getVersionedApiFolders($version);
 
-        collect($entries)->each(function ($entry) use ($baseFolder) {
-            $path = $baseFolder . DIRECTORY_SEPARATOR . $entry;
+        collect($entries)->each(function ($entry, $key) use ($baseFolder) {
+            $path = $baseFolder . DIRECTORY_SEPARATOR . ($entry ?? ucfirst($key));
             File::ensureDirectoryExists($path);
         });
     }
