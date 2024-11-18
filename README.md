@@ -74,6 +74,7 @@ Here is an example configuration for API versioning:
                 'as'          => 'posts',
                 'prefix'      => 'posts',
                 'namespace'   => 'Posts',
+                'group'       => 'admin',
                 'middlewares' => ['auth:api'],
             ],
         ],
@@ -104,6 +105,10 @@ http://example.com/api/v1/users/users
 ```
 
 This URL has the version prefix `v1` and the route prefix `users` specified in the configuration file.
+
+### Note:
+
+- The group key in the versioned files array is used to group the routes in folders, for example, if you have a group key with the value `admin`, the routes will be generated in a folder named `admin` in the routes directory.
 
 ## Handle Deprecation Notices
 
