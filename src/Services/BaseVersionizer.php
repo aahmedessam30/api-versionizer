@@ -308,6 +308,20 @@ class BaseVersionizer
     }
 
     /**
+     * Get the versioned folders that will created inside the api directory.
+     */
+    public function getVersionedApiFolders($version): array
+    {
+        return collect($this->getVersionInfo($version)['files'])
+            ->when(fn($files) => array_diff(
+                collect($this->getDefaultFiles())->pluck('name')->toArray(),
+                $files->pluck('name')->toArray()), fn($files) => $files->merge($this->getDefaultFiles())
+            )
+            ->pluck('namespace')
+            ->toArray();
+    }
+
+    /**
      * Is api path.
      */
     public function isApi(): bool

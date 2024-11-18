@@ -18,19 +18,53 @@ class VersionizerOperations extends BaseVersionizer
         return true;
     }
 
-    protected function generateVersionedFiles($version, $file): void
+    protected function generateVersionedFiles(string $version, string $file): void
     {
         $file = Str::singular($file);
 
         if ($file === 'route') {
             $this->generateRouteFiles($version, $file);
-        } else {
-            $folder = $this->getFolderPath($file) . DIRECTORY_SEPARATOR . ucfirst($this->getDefaultDirectory()) . DIRECTORY_SEPARATOR . ucfirst($version);
-
-            File::ensureDirectoryExists($folder);
-
-            // $this->generateStub($file, $folder, $version);
+            return;
         }
+
+        $folderPath = $this->buildFolderPath($file, $version);
+
+        File::ensureDirectoryExists($folderPath);
+
+        $this->createVersionFolders($version, $folderPath);
+    }
+
+    /**
+     * Generate folders for versioned files.
+     *
+     * @param string $version
+     * @param string $baseFolder
+     * @return void
+     */
+    protected function createVersionFolders(string $version, string $baseFolder): void
+    {
+        $entries = $this->getVersionedApiFolders($version);
+
+        collect($entries)->each(function ($entry) use ($baseFolder) {
+            $path = $baseFolder . DIRECTORY_SEPARATOR . $entry;
+            File::ensureDirectoryExists($path);
+        });
+    }
+
+    /**
+     * Build the folder path for the versioned files.
+     *
+     * @param string $file
+     * @param string $version
+     * @return string
+     */
+    protected function buildFolderPath(string $file, string $version): string
+    {
+        return $this->getFolderPath($file)
+            . DIRECTORY_SEPARATOR
+            . ucfirst($this->getDefaultDirectory())
+            . DIRECTORY_SEPARATOR
+            . ucfirst($version);
     }
 
     protected function generateRouteFiles($version, $name): void

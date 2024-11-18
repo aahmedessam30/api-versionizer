@@ -12,7 +12,7 @@ class ApiVersionizerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'api:versionize {--versions= : the versions to versionize the api}
+    protected string $signature = 'api:versionize {--versions= : the versions to versionize the api}
     {--copy= : copy this version to another version} {--to= : the version to copy to}
     {--delete= : delete this version} {--force : force the operation}';
 
@@ -21,7 +21,7 @@ class ApiVersionizerCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Versionize the api routes, controllers, and requests, etc.';
+    protected string $description = 'Versionize the api routes, controllers, and requests, etc.';
 
     /**
      * Execute the console command.
@@ -53,7 +53,7 @@ class ApiVersionizerCommand extends Command
 
                 $version = $this->getVersions($this->option('delete'))[0];
 
-                if ($this->confirm("Are you sure you want to delete the `$version` version, which will delete all the files in version `$version` Directories?")) {
+                if ($this->components->confirm("Are you sure you want to delete the `$version` version, which will delete all the files in version `$version` Directories?")) {
                     $this->deleteVersion($version);
                 }
                 return;
