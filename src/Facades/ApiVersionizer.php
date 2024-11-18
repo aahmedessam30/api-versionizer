@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static delete(array|bool|string|null $option)
  * @method static getFallbackVersion()
  * @method static getVersionsFromRoutes()
+ * @method static useDefaultNamespace(mixed $version)
  */
 class ApiVersionizer extends Facade
 {

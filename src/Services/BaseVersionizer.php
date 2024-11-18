@@ -322,6 +322,14 @@ class BaseVersionizer
     }
 
     /**
+     * Check if the version uses the default namespace.
+     */
+    public function useDefaultNamespace(): bool
+    {
+        return config('api-versionizer.use_default_namespace', true);
+    }
+
+    /**
      * Is api path.
      */
     public function isApi(): bool

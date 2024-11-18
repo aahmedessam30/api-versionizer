@@ -140,6 +140,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Use Default Namespace
+    |--------------------------------------------------------------------------
+    |
+    | To use the default namespace of the versioned api.
+    | If you want to use the default namespace, set it to true.
+    | then any route will use the App/Http/Controllers/Api namespace.
+    | If you want to use your custom namespace, set it to false.
+    | then you can define the namespace in the route file.
+    |
+    */
+    'use_default_namespace' => true,
+
+    /*
+    |--------------------------------------------------------------------------
     | Versions
     |--------------------------------------------------------------------------
     |
