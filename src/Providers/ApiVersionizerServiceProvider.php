@@ -40,5 +40,9 @@ class ApiVersionizerServiceProvider extends ServiceProvider
             __DIR__ . '/../Middleware/ApiVersionizerMiddleware.php' => app_path('Http/Middleware/ApiVersionizerMiddleware.php'),
             __DIR__ . '/../Middleware/LocalizationMiddleware.php' => app_path('Http/Middleware/LocalizationMiddleware.php'),
         ], 'apiversionizer-middleware');
+
+        $this->publishes([
+            __DIR__ . '/ApiVersionizerRouteServiceProvider.php' => app_path('Providers/ApiVersionizerRouteServiceProvider.php'),
+        ], 'apiversionizer-provider');
     }
 }
