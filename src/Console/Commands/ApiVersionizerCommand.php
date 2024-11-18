@@ -12,7 +12,7 @@ class ApiVersionizerCommand extends Command
      *
      * @var string
      */
-    protected string $signature = 'api:versionize {--versions= : the versions to versionize the api}
+    protected $signature = 'api:versionize {--versions= : the versions to versionize the api}
     {--copy= : copy this version to another version} {--to= : the version to copy to}
     {--delete= : delete this version} {--force : force the operation}';
 
@@ -21,7 +21,7 @@ class ApiVersionizerCommand extends Command
      *
      * @var string
      */
-    protected string $description = 'Versionize the api routes, controllers, and requests, etc.';
+    protected $description = 'Versionize the api routes, controllers, and requests, etc.';
 
     /**
      * Execute the console command.
