@@ -14,7 +14,11 @@ class ApiVersionizerRouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mapApiVersionsRoutes();
+        $this->app->booted(function () {
+            ApiVersionizer::registerMacros();
+
+            $this->mapApiVersionsRoutes();
+        });
     }
 
     /**
@@ -27,6 +31,10 @@ class ApiVersionizerRouteServiceProvider extends ServiceProvider
         if (ApiVersionizer::getVersionFiles($reqVersion) && file_exists(base_path(ApiVersionizer::getRoutePath($reqVersion)))) {
 
             foreach (ApiVersionizer::getVersionFiles($reqVersion) as $version) {
+
+                if (app()->runningInConsole() && !file_exists(base_path(ApiVersionizer::getRoutePath($reqVersion)) . DIRECTORY_SEPARATOR . "{$version['name']}.php")) {
+                    return;
+                }
 
                 $route = Route::middleware(ApiVersionizer::getVersionMiddlewares($version))
                     ->prefix(ApiVersionizer::getVersionedFilesPrefix($version))

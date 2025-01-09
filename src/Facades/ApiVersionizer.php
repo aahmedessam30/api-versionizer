@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static getFallbackVersion()
  * @method static getVersionsFromRoutes()
  * @method static useDefaultNamespace(mixed $version)
+ * @method static registerMacros()
  */
 class ApiVersionizer extends Facade
 {
