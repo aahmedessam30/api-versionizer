@@ -136,6 +136,22 @@ php artisan api:versionize --delete=v1
 
 This command will delete the version `v1` and will remove the versioned routes and files for the specified version.
 
+## Route Macros
+If you want to use crud routes for a model, you can use the following route macros:
+
+```php
+Route::crud('users', 'UserController');
+```
+
+This will generate the following routes for the `UserController`:
+
+```php
+Route::apiResource('users', 'UserController');
+Route::get('users/trash', 'UserController@trash')->name('users.trash');
+Route::patch('users/{user}/restore', 'UserController@restore')->name('users.restore');
+Route::delete('users/{user}/force-delete', 'UserController@forceDelete')->name('users.force-delete');
+```
+
 # Features
 
 - **Flexible Routing**: Define versioned routes with custom prefixes, namespaces, and middlewares.
